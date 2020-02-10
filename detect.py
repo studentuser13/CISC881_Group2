@@ -21,6 +21,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
+# Added Feb 2020
+import pandas as pd
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
@@ -91,6 +94,9 @@ if __name__ == "__main__":
     cmap = plt.get_cmap("tab20b")
     colors = [cmap(i) for i in np.linspace(0, 1, 20)]
 
+    # Added Feb 2020
+    out_lst = []
+
     print("\nSaving images:")
     # Iterate through images and save plot of detections
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
@@ -113,6 +119,9 @@ if __name__ == "__main__":
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
 
                 print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
+                
+                #Added Feb 2020
+                out_lst.append(np.array([np.mean([x1,x2]), np.mean([y1,y2]), conf, cls_conf, cls_pred]))
 
                 box_w = x2 - x1
                 box_h = y2 - y1
@@ -139,3 +148,7 @@ if __name__ == "__main__":
         filename = path.split("/")[-1].split(".")[0]
         plt.savefig(f"output/{filename}.png", bbox_inches="tight", pad_inches=0.0)
         plt.close()
+
+        out_df = pd.DataFrame(out_lst, columns=['x','y','conf','cls_conf','cls_pred'])
+        out_df['file'] = pd.Series(imgs)
+        out_df.to_csv('out.csv')
