@@ -1,3 +1,12 @@
+# CISC 881 Group 2
+## Assignment 1
+We forked this implementation of YOLOv3 to predict pulmonary nodule centroids locations on the Lung Nodule Database (https://lndb.grand-challenge.org/).
+We have also included ancilliary scripts that we used for preprocessing, checking the data and postprocessing for submission to the challenge.
+the utilities script from the LNDb challenge, utils.py and ground truth labels
+
+Below are the instructions from the original repo that we forked. Some changes were made to the code, but nothing significant. Credit where credit is due, see the custom model section for how we used this code for our work, 
+#### forked from eriklindernoren,
+
 # PyTorch-YOLOv3
 A minimal PyTorch implementation of YOLOv3, with support for training, inference and evaluation.
 
@@ -10,22 +19,6 @@ A minimal PyTorch implementation of YOLOv3, with support for training, inference
 ##### Download pretrained weights
     $ cd weights/
     $ bash download_weights.sh
-
-##### Download COCO
-    $ cd data/
-    $ bash get_coco_dataset.sh
-    
-## Test
-Evaluates the model on COCO test.
-
-    $ python3 test.py --weights_path weights/yolov3.weights
-
-| Model                   | mAP (min. 50 IoU) |
-| ----------------------- |:-----------------:|
-| YOLOv3 608 (paper)      | 57.9              |
-| YOLOv3 608 (this impl.) | 57.3              |
-| YOLOv3 416 (paper)      | 55.3              |
-| YOLOv3 416 (this impl.) | 55.5              |
 
 ## Inference
 Uses pretrained weights to make predictions on images. Below table displays the inference times when using as inputs images scaled to 256x256. The ResNet backbone measurements are taken from the YOLOv3 paper. The Darknet-53 measurement marked shows the inference time of this implementation on my 1080ti card.
