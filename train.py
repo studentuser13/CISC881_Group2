@@ -92,6 +92,9 @@ if __name__ == "__main__":
         "conf_obj",
         "conf_noobj",
     ]
+    
+    prev_AP = np.zeros((2,1))
+    patience = 0
 
     for epoch in range(opt.epochs):
         model.train()
@@ -159,6 +162,7 @@ if __name__ == "__main__":
                 img_size=opt.img_size,
                 batch_size=8,
             )
+
             evaluation_metrics = [
                 ("val_precision", precision.mean()),
                 ("val_recall", recall.mean()),
@@ -173,6 +177,19 @@ if __name__ == "__main__":
                 ap_table += [[c, class_names[c], "%.5f" % AP[i]]]
             print(AsciiTable(ap_table).table)
             print(f"---- mAP {AP.mean()}")
+
+
+            if (AP * np.array([0.16, 0.83])).sum() > (prev_AP * np.array([0.16, 0.83])).sum():
+                torch.save(model.state_dict(), f"checkpoints/yolov3_best_ckpt.pth")
+                print(f'New best mAP . . . saving weights')
+                patience = 0
+            else:
+                if patience % 5 == 0:
+                    if os.path.isfile(f"checkpoints/yolov3_best_ckpt.pth"):
+                        model.load_state_dict(torch.load( f"checkpoints/yolov3_best_ckpt.pth"))
+                else:
+                    patience += 1
+            prev_AP = AP
 
         if epoch % opt.checkpoint_interval == 0:
             torch.save(model.state_dict(), f"checkpoints/yolov3_ckpt_%d.pth" % epoch)

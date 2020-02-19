@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
     # Added Feb 2020
     out_lst = []
-
+    img_lst = []
     print("\nSaving images:")
     # Iterate through images and save plot of detections
     for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
@@ -122,7 +122,7 @@ if __name__ == "__main__":
                 
                 #Added Feb 2020
                 out_lst.append(np.array([np.mean([x1,x2]), np.mean([y1,y2]), conf, cls_conf, cls_pred]))
-
+                img_lst.append(path)
                 box_w = x2 - x1
                 box_h = y2 - y1
 
@@ -150,5 +150,5 @@ if __name__ == "__main__":
         plt.close()
 
         out_df = pd.DataFrame(out_lst, columns=['x','y','conf','cls_conf','cls_pred'])
-        out_df['file'] = pd.Series(imgs)
+        out_df['file'] = pd.Series(img_lst)
         out_df.to_csv('out.csv')
